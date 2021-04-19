@@ -7,7 +7,8 @@ Read the [Product Requirements and Design Doc](https://docs.google.com/document/
 ## Building and testing
 
 * Clone this repo and cd to it
-* `npm install truffle`
+* `sudo npm install -g truffle` if you don't have it already
+* `npm install`
 * `truffle compile`
 * `truffle develop`
 * `truffle> migrate`
