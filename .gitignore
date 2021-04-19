@@ -1,0 +1,4 @@
+build
+node_modules
+
+# Note that package-lock.json should be committed
