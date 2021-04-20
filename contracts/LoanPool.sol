@@ -23,6 +23,7 @@ contract LoanPool {
     // uint8 constant EXCESS_FUNDS_PERCENT_LIMIT = 110;
 
     event Received(address, uint);
+    event Applied(address, uint);
 
     constructor() {
         totalLent = 0;
@@ -63,7 +64,7 @@ contract LoanPool {
     // of the loan will rely on the applicant signing messages with
     // their private key from the public ETH address from which they
     // call this method.
-    function apply_for_mortgage() external {
-
+    function apply_for_mortgage(uint loanAmount) external {
+        emit Applied(msg.sender, loanAmount);
     }
 }

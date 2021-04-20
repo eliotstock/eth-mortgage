@@ -1,24 +1,29 @@
 const LoanPool = artifacts.require("LoanPool");
 
-const WEI_PER_ETH = 1_000_000_000_000_000_000;
-
 contract('LoanPool', (accounts) => {
-    it('should add some ETH to the loan pool', async () => {
+    it('should allow lenders to add some funds to the loan pool',
+        async () => {
         const loanPoolInstance = await LoanPool.deployed();
         const lender = accounts[0];
-        const contribInEth = 9;
-        const contrib = contribInEth * WEI_PER_ETH;
+        const contribAmount = web3.utils.toWei('9', 'ether');
 
-        var result = await loanPoolInstance.send(contrib);
-        assert.isTrue(result.receipt.status, "Couldn't send " + contribInEth
-            + " ETH to the loan pool");
+        var result = await loanPoolInstance.send(contribAmount);
+        assert.isTrue(result.receipt.status, "Couldn't send "
+            + contribAmount + " to the loan pool");
 
         var totalContribs = await loanPoolInstance.totalContributions();
-        assert.equal(totalContribs, contrib,
-            "Total contributions were not " + contribInEth + " ETH");
+        assert.equal(totalContribs, contribAmount,
+            "Total contributions were not " + contribAmount);
     });
 
     it('should allow borrowers to apply for a mortgage', async () => {
         const loanPoolInstance = await LoanPool.deployed();
+        const borrower = accounts[1];
+        const loanAmount = web3.utils.toWei('7', 'ether');
+
+        var result = await loanPoolInstance
+            .apply_for_mortgage(loanAmount);
+        assert.isTrue(result.receipt.status, "Couldn't apply for a "
+            + loanAmount + " mortgage loan");
     })
 });
