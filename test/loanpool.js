@@ -30,7 +30,7 @@ contract('LoanPool', (accounts) => {
         // See truffle issue:
         //   https://github.com/trufflesuite/truffle/issues/2045
         const {logs} = await loanPoolInstance
-            .apply_for_mortgage(loanAmount);
+            .applyForMortgage(loanAmount);
         const address = logs[0].address;
 
         // Works OK and we can see our contract on the console:

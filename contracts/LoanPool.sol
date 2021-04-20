@@ -23,7 +23,7 @@ contract LoanPool {
     // lend out to borrowers.
     // uint8 constant EXCESS_FUNDS_PERCENT_LIMIT = 110;
 
-    event Received(address, uint);
+    event ReceivedFunds(address, uint);
     event Applied(address, uint);
 
     constructor() {
@@ -34,7 +34,7 @@ contract LoanPool {
     // calling send() or transfer(). Borrowers should not call this
     // contract.
     receive() external payable {
-        emit Received(msg.sender, msg.value);
+        emit ReceivedFunds(msg.sender, msg.value);
 
         // TODO(P1): Look up the sender and figure out whether
         // they're a lender, a mortgage contract or neither. For now,
@@ -62,7 +62,7 @@ contract LoanPool {
     // of the loan will rely on the applicant signing messages with
     // their private key from the public ETH address from which they
     // call this method.
-    function apply_for_mortgage(uint loanAmount) external
+    function applyForMortgage(uint loanAmount) external
         returns (Mortgage mortgageAddress) {
         emit Applied(msg.sender, loanAmount);
 
