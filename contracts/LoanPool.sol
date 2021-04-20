@@ -42,7 +42,7 @@ contract LoanPool {
         // assume they're a lender.
 
         // TODO(P3): Don't accept more funds that we can reasonably
-        // lend out to borrowers.
+        // lend out to borrowers any time soon.
         // uint256 excessFundsAbs = address(this).balance - totalLent;
         // Avoid division by zero when we're brand new:
         // uint256 excessFundsPercent = (excessFundsAbs / totalLent)
@@ -54,5 +54,16 @@ contract LoanPool {
         lenders.add(msg.sender);
         lenderContributions[msg.sender] += msg.value;
         totalContributions += msg.value;
+    }
+
+    // An applicant for a mortgage may apply by calling this function
+    // from their EOA. We seek not to store any PII on-chain and the
+    // applicant should not provide any. Business processes for
+    // assessing the applicant's creditworthiness and affordability
+    // of the loan will rely on the applicant signing messages with
+    // their private key from the public ETH address from which they
+    // call this method.
+    function apply_for_mortgage() external {
+
     }
 }
