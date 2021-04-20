@@ -24,15 +24,27 @@ contract('LoanPool', (accounts) => {
         const borrower = accounts[1];
         const loanAmount = web3.utils.toWei('7', 'ether');
 
-        // TODO: Get the instance of the Mortgage contract returned
+        // Get the instance of the Mortgage contract returned
         // by apply_for_mortgage() and assert it's in the right
         // state.
-        var result = await loanPoolInstance
+        // See truffle issue:
+        //   https://github.com/trufflesuite/truffle/issues/2045
+        const {logs} = await loanPoolInstance
             .apply_for_mortgage(loanAmount);
+        const address = logs[0].address;
 
-        console.log(result);
+        // Works OK and we can see our contract on the console:
+        const mortgage = await Mortgage.at(address);
+        await console.log("mortgage:");
+        await console.log(mortgage);
 
-        assert.isTrue(result.receipt.status, "Couldn't apply for a "
-            + loanAmount + " mortgage loan");
+        // Fails with:
+        //   Error: Returned error: VM Exception while processing transaction: revert
+        const state = await mortgage.state();
+        await console.log("state:");
+        await console.log(state);
+
+        // assert.equal("Applied", state, "Couldn't apply for a "
+        //     + loanAmount + " mortgage loan");
     })
 });
