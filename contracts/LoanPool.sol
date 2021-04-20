@@ -13,10 +13,13 @@ contract LoanPool {
 
     uint public totalLent;
 
-    // TODO(P2): Remove and replace with a getter that iterates over
-    // lenderContributions using keys from lenders.
+    // This could instead be implemented as a getter that iterates
+    // over lenderContributions using keys from lenders, but that
+    // would be costly to exeucute.
     uint public totalContributions;
 
+    // TODO(P3): Don't accept more funds that we can reasonably
+    // lend out to borrowers.
     // uint8 constant EXCESS_FUNDS_PERCENT_LIMIT = 110;
 
     event Received(address, uint);
@@ -25,7 +28,7 @@ contract LoanPool {
         totalLent = 0;
     }
 
-    // Both lenders and mortgage contracts can send money here by
+    // Both lenders and mortgage contracts can send ETH here by
     // calling send() or transfer(). Borrowers should not call this
     // contract.
 
