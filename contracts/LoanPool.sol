@@ -14,38 +14,37 @@ contract LoanPool {
 
     uint public totalLent;
 
-    // TODO(P3): This could instead be implemented as a getter that
-    // iterates over lenderContributions using keys from lenders, and
-    // that would only be a call, not a transaction.
+    // TODO(P3): This could instead be implemented as a getter that iterates
+    // over lenderContributions using keys from lenders, and that would only be
+    // a call, not a transaction, so cost is ot a concern.
     uint public totalContributions;
 
-    // TODO(P3): Don't accept more funds that we can reasonably
-    // lend out to borrowers.
+    // TODO(P3): Don't accept more funds that we can reasonably lend out to
+    // borrowers.
     // uint8 constant EXCESS_FUNDS_PERCENT_LIMIT = 110;
 
     event ReceivedFunds(address, uint);
-    event Applied(address, uint);
+    event NewMortgageApplication(Mortgage);
 
     constructor() {
         totalLent = 0;
     }
 
-    // Both lenders and mortgage contracts can send ETH here by
-    // calling send() or transfer(). Borrowers should not call this
-    // contract.
+    // Both lenders and mortgage contracts can send ETH here by calling send()
+    // or transfer(). Borrowers should not call this contract.
     receive() external payable {
         emit ReceivedFunds(msg.sender, msg.value);
 
-        // TODO(P1): Look up the sender and figure out whether
-        // they're a lender, a mortgage contract or neither. For now,
-        // assume they're a lender.
+        // TODO(P1): Look up the sender and figure out whether they're a
+        // lender, a mortgage contract or neither. For now, assume they're a
+        // lender.
 
-        // TODO(P3): Don't accept more funds that we can reasonably
-        // lend out to borrowers any time soon.
+        // TODO(P3): Don't accept more funds that we can reasonably lend out to
+        // borrowers any time soon.
+
         // uint256 excessFundsAbs = address(this).balance - totalLent;
         // Avoid division by zero when we're brand new:
-        // uint256 excessFundsPercent = (excessFundsAbs / totalLent)
-        //         * 100;
+        // uint256 excessFundsPercent = (excessFundsAbs / totalLent) * 100;
         // require(excessFundsPercent < EXCESS_FUNDS_PERCENT_LIMIT,
         //         "Sorry, too much. We're full.");
 
@@ -55,17 +54,20 @@ contract LoanPool {
         totalContributions += msg.value;
     }
 
-    // An applicant for a mortgage may apply by calling this function
-    // from their EOA. We seek not to store any PII on-chain and the
-    // applicant should not provide any. Business processes for
-    // assessing the applicant's creditworthiness and affordability
-    // of the loan will rely on the applicant signing messages with
-    // their private key from the public ETH address from which they
-    // call this method.
+    // An applicant for a mortgage may apply by calling this function from
+    // their EOA. We seek not to store any PII on-chain and the applicant
+    // should not provide any. Business processes for assessing the applicant's
+    // creditworthiness and affordability of the loan will rely on the
+    // applicant signing messages with their private key from the public ETH
+    // address from which they call this method.
     function applyForMortgage(uint loanAmount) external
         returns (Mortgage mortgageAddress) {
-        emit Applied(msg.sender, loanAmount);
+        Mortgage m = new Mortgage(msg.sender, loanAmount);
 
-        return new Mortgage(msg.sender, loanAmount);
+        // The JS tests rely on this event in order to get the Mortgage
+        // instance.
+        emit NewMortgageApplication(m);
+
+        return m;
     }
 }
