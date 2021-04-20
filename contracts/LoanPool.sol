@@ -14,9 +14,9 @@ contract LoanPool {
 
     uint public totalLent;
 
-    // This could instead be implemented as a getter that iterates
-    // over lenderContributions using keys from lenders, but that
-    // would be costly to exeucute.
+    // TODO(P3): This could instead be implemented as a getter that
+    // iterates over lenderContributions using keys from lenders, and
+    // that would only be a call, not a transaction.
     uint public totalContributions;
 
     // TODO(P3): Don't accept more funds that we can reasonably
@@ -33,9 +33,6 @@ contract LoanPool {
     // Both lenders and mortgage contracts can send ETH here by
     // calling send() or transfer(). Borrowers should not call this
     // contract.
-
-    // TODO(P3): Should callers use send(), which returns false on
-    // failure, or transfer(), which throws on failure?
     receive() external payable {
         emit Received(msg.sender, msg.value);
 
