@@ -2,6 +2,7 @@
 pragma solidity =0.8.3;
 
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "./Mortgage.sol";
 
 contract LoanPool {
 
@@ -64,7 +65,10 @@ contract LoanPool {
     // of the loan will rely on the applicant signing messages with
     // their private key from the public ETH address from which they
     // call this method.
-    function apply_for_mortgage(uint loanAmount) external {
+    function apply_for_mortgage(uint loanAmount) external
+        returns (Mortgage mortgageAddress) {
         emit Applied(msg.sender, loanAmount);
+
+        return new Mortgage(msg.sender, loanAmount);
     }
 }
